@@ -24,7 +24,7 @@ type Tail struct {
 	follow bool
 }
 
-func (t *Tail) Strings() chan string {
+func (t *Tail) Lines() chan string {
 	c := make(chan string)
 	go func() {
 		s := bufio.NewScanner(t)

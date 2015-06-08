@@ -8,7 +8,6 @@ package tail
 
 import (
 	"fmt"
-	//"log"
 	"os"
 	"testing"
 	"time"
@@ -38,7 +37,6 @@ func ticker(limit int, redo bool) {
 		for {
 			select {
 			case <-tick:
-				//fmt.Println("TICK:", cnt, time.Now())
 				fmt.Fprintln(file, cnt, time.Now())
 				file.Sync()
 				cnt++
@@ -47,9 +45,7 @@ func ticker(limit int, redo bool) {
 				}
 				file.Close()
 				os.Remove(sample)
-				//t.Log("DELETED SAMPLE FILE")
 				if !redo {
-					//fmt.Println("BREAK SAMPLE")
 					goto DONE
 				}
 				file = testFile()
@@ -59,14 +55,13 @@ func ticker(limit int, redo bool) {
 			}
 		}
 	DONE:
-		//fmt.Println("END OF SAMPLE")
 	}()
 }
 
 func TestStrings(t *testing.T) {
 	ticker(3, false)
 	w := NewTail(sample, false)
-	for s := range w.Strings() {
+	for s := range w.Lines() {
 		t.Log("TAIL:", s)
 	}
 }
@@ -75,7 +70,7 @@ func TestResume(t *testing.T) {
 	ticker(3, true)
 	w := NewTail(sample, true)
 	c := 0
-	for s := range w.Strings() {
+	for s := range w.Lines() {
 		t.Log("TAIL:", s)
 		c++
 		if c > 10 {
